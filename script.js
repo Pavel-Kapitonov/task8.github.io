@@ -36,25 +36,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
 
         try {
-            const response = await fetch('https://formcarry.com/s/9MOe0WO5uDQ', {
-                method: 'POST',
-                body: formData
-            });
+                const response = await fetch('https://formcarry.com/s/9MOe0WO5uDQ', {
+                    method: 'POST',
+                    body: formData
+                });
 
-            if (response.ok) {
-                statusMsg.textContent = '✅ Форма успешно отправлена!';
-                statusMsg.className = 'status success';
-
-                // очищаем форму
-                form.reset();
-                clearFormData();
-            } else {
-                throw new Error('Ошибка сервера');
+                // 🚀 ИСПРАВЛЕНИЕ: Проверяем статус ответа
+                // Обычно 200/201 означает успех, но Formcarry иногда возвращает 302 или 422 
+                // даже при успешной записи.
+                const isSuccess = response.status >= 200 && response.status < 400; 
+                
+                // Если Formcarry вернул статус, который мы считаем успешным (например, 200, 201 или 302):
+                if (isSuccess) {
+                    // Успешно отправлено
+                    statusMsg.textContent = '✅ Форма успешно отправлена!';
+                    statusMsg.className = 'status success';
+                    // Очищаем форму
+                    form.reset();
+                    // Очищаем localStorage
+                    clearFormData();
+                } 
+                // Если Formcarry вернул ошибку, которую мы считаем провалом (4xx или 5xx):
+                else {
+                    // Читаем ответ сервера для более точного сообщения об ошибке
+                    const result = await response.json(); 
+                    throw new Error(result.message || 'Неизвестная ошибка сервера');
+                }
+            } catch (error) {
+                statusMsg.textContent = '❌ Ошибка отправки: ' + error.message;
+                statusMsg.className = 'status error';
             }
-        } catch (error) {
-            statusMsg.textContent = '❌ Ошибка отправки: ' + error.message;
-            statusMsg.className = 'status error'; // для классов main.css чтобы менять цвет
-        }
     });
 
 
@@ -73,5 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     form.addEventListener('input', saveFormData);
+
 
 });
