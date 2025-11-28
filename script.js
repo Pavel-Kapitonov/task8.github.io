@@ -38,7 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
                 const response = await fetch('https://formcarry.com/s/9MOe0WO5uDQ', {
                     method: 'POST',
-                    body: formData
+                    body: formData,
+                    headers: {
+                    'Accept': 'application/json' 
+                    }
                 });
 
                 // 🚀 ИСПРАВЛЕНИЕ: Проверяем статус ответа
@@ -87,3 +90,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
