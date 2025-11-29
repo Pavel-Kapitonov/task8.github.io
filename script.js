@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeForm() {
         popup.style.display = 'none';
-        history.pushState({}, '', window.location.pathname + window.location.search); // Очищаем хэш, чтобы вернуться к обычному URL
+        history.back();
 
         statusMsg.textContent = '';
         statusMsg.className = 'status';
@@ -80,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
 
 
 
