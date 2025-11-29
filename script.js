@@ -78,8 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
+    form.addEventListener('input', saveFormData);
 });
+
 
 
 
